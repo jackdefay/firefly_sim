@@ -4,23 +4,22 @@ import matplotlib.pyplot as plt
 
 import swarm
 
-s1 = swarm.Swarm(2)
+s1 = swarm.Swarm(3)
 
 fig, ax = plt.subplots()
 
 for fly in s1.fireflies:
     print(fly.id_num)
 
-duration = 200
+duration = 100
 
 for time in range(duration):
-    s1.fireflies[0].charging()
-    if(s1.fireflies[0].isFlashing):
-        s1.addFlashData()
-        s1.fireflies[1].charge += 10
-    s1.fireflies[1].charging()
+    s1.chargeIteration()
+    s1.flashPropogationLoop()
 
 
-s1.plotChargeData(ax, 0)
+s1.plotFlashData(ax, 0)
+s1.plotFlashData(ax, 1)
+s1.plotFlashData(ax, 2)
 
 plt.show()

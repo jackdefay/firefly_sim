@@ -20,7 +20,7 @@ class Firefly:
         self.id_num = id_num
         self.charge = initial_charge
 
-        self.flashing = False
+        self.isFlashing = False
         self.chargeData = []
         self.flashData = []
         
@@ -31,14 +31,21 @@ class Firefly:
     def sqrt(self, x):
         return np.ceil(np.sqrt(x+1))
 
-    def charging(self):
-        self.charge = self.charge + self.sqrt(self.charge)
+    def checkFlash(self):
         if(self.charge >= 100):
             self.isFlashing = True
-            self.charge = 0
         else:
             self.isFlashing = False
 
+    def charging(self):
+        #adds to charging curve based on incremental value defined by charging curve and the current value
+        self.charge = self.charge + self.sqrt(self.charge)
+        #checks if the fly is flashing so the swarm function can propogate it
+        self.checkFlash()
+        #zeros out the charge if it is
+        if(self.isFlashing):
+            self.charge = 0
+        #keeps a log of charge data
         self.chargeData.append(self.charge)
 
     
