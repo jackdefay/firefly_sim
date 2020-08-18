@@ -1,6 +1,21 @@
 import numpy as np
+import abc
 
-class Firefly:
+class Observer(metaclass=abc.ABCMeta):
+    """
+    Define an updating interface for objects that should be notified of
+    changes in a subject.
+    """
+
+    def __init__(self):
+        self._subject = None
+        self._observer_state = None
+
+    @abc.abstractmethod
+    def update(self, arg):
+        pass
+
+class Firefly(Observer):
     #function that inputs "time" in some discrete units and outputs proportion of "charge"
     #start with lets say a log scale, so it curves the correct way
     #sets a flag to say if it lights up
@@ -15,6 +30,7 @@ class Firefly:
 
     chargeData = []
     flashData = []
+    _subject = None
 
     def __init__(self, id_num, initial_charge):
         self.id_num = id_num
@@ -24,6 +40,9 @@ class Firefly:
         self.chargeData = []
         self.flashData = []
         
+    def update(self, arg):
+        self.charge += 10
+
 
     def log(self, x):
         return np.ceil(np.log(x+1))
@@ -36,15 +55,16 @@ class Firefly:
             self.isFlashing = True
         else:
             self.isFlashing = False
+        return self.isFlashing
 
     def charging(self):
         #adds to charging curve based on incremental value defined by charging curve and the current value
         self.charge = self.charge + self.sqrt(self.charge)
-        #checks if the fly is flashing so the swarm function can propogate it
-        self.checkFlash()
-        #zeros out the charge if it is
-        if(self.isFlashing):
-            self.charge = 0
+        # #checks if the fly is flashing so the swarm function can propogate it
+        # self.checkFlash()
+        # #zeros out the charge if it is
+        # if(self.isFlashing):
+        #     self.charge = 0
         #keeps a log of charge data
         self.chargeData.append(self.charge)
 
